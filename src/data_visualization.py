@@ -1,10 +1,8 @@
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
-from src.banking_analytics import load_file
+from src import load_file
 
-
-df = load_file.load_data()
 
 def plot_age_distribution(df):
     """plot age distribution"""
@@ -35,8 +33,7 @@ def plot_correlation_heatmap(df):
     plt.show()
 
 def main():
-    file_path = "/Users/skhansar19/PycharmProjects/bank_customer_analysis/data/bank.csv"
-
+    df = load_file.load_data()
     plot_age_distribution(df)
     plot_job_distribution(df)
     plot_correlation_heatmap(df)

@@ -1,9 +1,8 @@
 from sklearn.preprocessing import LabelEncoder
-from src.banking_analytics import load_file
+from src import load_file
+from pathlib import Path
 import pandas as pd
 
-
-df = load_file.load_data()
 
 def handle_missing_values(df):
     #For this dataset, usually 'unknown' is used instead of Nan
@@ -18,7 +17,7 @@ def handle_missing_values(df):
 
 def creat_new_feature(df):
     df = df.copy()
-    df = pd.cut(df['age'], bins = [0,20,50,40,60,100], labels = ["Young", "Adult", "Middle_age", "senior"])
+    df['age_group'] = pd.cut(df['age'], bins = [0,20,50,60,100], labels = ["Young", "Adult", "Middle_age", "senior"])
     return df
 
 def encode_categorical(df):
@@ -31,17 +30,20 @@ def encode_categorical(df):
 
     return df
 
-def save_data(df, file_path):
-    df.to_csv(file_path, index = False)
-    print(f"File saved successfully {file_path}")
+def save_data(df, file_name = 'bank_final.csv'):
+    project_root = Path(__file__).resolve().parents[1]
+    output_path = project_root / "data" / file_name
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+    df.to_csv(output_path, index=False)
+    print(f"File saved successfully at {output_path}")
+
 
 def main():
-
-    output = "/Users/skhansar19/PycharmProjects/bank_customer_analysis/data/bank_final.csv"
+    df = load_file.load_data()
     df = handle_missing_values(df)
     df = creat_new_feature(df)
     df = encode_categorical(df)
-    save_data(df, output)
+    save_data(df, "bank_final.csv")
 
 if __name__ == "__main__":
     main()

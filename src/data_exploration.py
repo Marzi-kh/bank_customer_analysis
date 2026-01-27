@@ -1,7 +1,7 @@
 import pandas as pd
-from src.banking_analytics import load_file
+from src import load_file
 
-df = load_file.load_data()
+
 def load_data(file_path):
     """ Loads data from csv file"""
     data = pd.read_csv(file_path)
@@ -31,8 +31,8 @@ def save_clean_data(df, file_path):
 
 
 def main():
-    data = load_data("/Users/skhansar19/PycharmProjects/bank_customer_analysis/data/bank.csv")
-    explore_df(data)
+    df = load_file.load_data()
+    explore_df(df)
 
 if __name__ == "__main__":
     main()
