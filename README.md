@@ -1,8 +1,12 @@
 # Bank Customer Analysis
 
 ## Project Overview
-This project analyzes bank customer data using Python.  
-It includes data exploration, visualization, and cleaning.  
+This project analyzes bank customer marketing data using Python to understand patterns in customer behavior and predict whether a client will subscribe to a term deposit.
+It includes:
+Data exploration and visualization
+Data cleaning and preprocessing
+Feature engineering
+Baseline machine learning model for classification 
 
 ## Requirements
 - Python 3  
@@ -15,6 +19,7 @@ It includes data exploration, visualization, and cleaning.
 - `data_exploration.py` → Explore the dataset  
 - `data_visualization.py` → Visualize data with charts  
 - `data_cleaning.py` → Clean and encode data  
+- `train_baseline.py` → Train baseline classification model
 - `requirements.txt` → Python libraries  
 
 ## How to Run
@@ -27,7 +32,8 @@ pip install -r requirements.txt
    1. `load_file.py`
    2. `data_exploration.py`  
    3. `data_cleaning.py` 
-   4. `data_visualization.py`  
+   4. `data_visualization.py` 
+   5. `train_baseline.py` 
 
 
 
