@@ -24,6 +24,36 @@ def explore_df(df):
     print("\n'missing Value per Column:")
     print(df.isnull().sum())
 
+    print("\n" + "=" * 5)
+    print("DUPLICATE ROWS")
+    print("=" * 5)
+    print(df.duplicated().sum())
+
+    num_cols = df.select_dtypes(include=["int64", "float64"]).columns
+    cat_cols = df.select_dtypes(include=["object"]).columns
+
+    print("\n" + "=" * 50)
+    print("NUMERICAL COLUMNS")
+    print("=" * 50)
+    print(list(num_cols))
+
+    print("\n" + "=" * 50)
+    print("CATEGORICAL COLUMNS")
+    print("=" * 50)
+    print(list(cat_cols))
+
+    if "deposit" in df.columns:
+        print("\n" + "=" * 50)
+        print("TARGET DISTRIBUTION (deposit)")
+        print("=" * 50)
+        print(df["deposit"].value_counts())
+
+        print("\nPercentages:")
+        print(df["deposit"].value_counts(normalize=True) * 100)
+
+
+
+
 def save_clean_data(df, file_path):
     """ Save cleaned data to csv file"""
     df.to_csv(file_path, index=False)
