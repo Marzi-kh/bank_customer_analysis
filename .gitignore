@@ -1,6 +1,18 @@
-# Default ignored files
-/.idea/
 .idea/
-.idea
-# Editor-based HTTP Client requests
-/httpRequests/
+.vscode/
+.DS_Store
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.venv/
+venv/
+env/
+.ipynb_checkpoints/
+build/
+dist/
+*.egg-info/
+outputs/
+data/bank_clean.csv
+data/bank_final.csv
+*.log
