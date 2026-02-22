@@ -16,3 +16,5 @@ outputs/
 data/bank_clean.csv
 data/bank_final.csv
 *.log
+.idea/
+.DS_Store
