@@ -2,14 +2,14 @@ Bank Customer Analysis
 
 This project explores a bank marketing dataset and builds a simple machine learning model to 
 predict whether a customer will subscribe to a term deposit. The goal is to understand which 
-customer characteristics are associated with higher subscription rates and to create a b
-aseline predictive model.
+customer characteristics are associated with higher subscription rates and to create a 
+baseline predictive model.
 
 The project includes data exploration, feature engineering, and a logistic regression model 
 implemented using a scikit-learn pipeline.
 
 
-# Dataset
+Dataset:
 
 The dataset contains 11,162 customer records with 17 variables describing demographic information,
 financial status, and previous marketing interactions.
@@ -27,7 +27,7 @@ No missing values
 No duplicate rows
 
 
-Exploratory Data Analysis
+Exploratory Data Analysis:
 
 The analysis begins with basic dataset inspection (head, summary statistics, missing values, 
 column types).  
@@ -36,9 +36,9 @@ relate to the probability of subscribing.
 
 Some interesting patterns appear in the data.
 
-Job
+Job      subscription rate
 
-Student → 74.7% subscription rate  
+Student → 74.7%   
 Retired → 66.3%  
 Management → 50.7%  
 Blue-collar → 36.4%
@@ -66,9 +66,26 @@ Unknown outcome → 40.7%
 These patterns suggest that job type, housing status, and previous campaign success may be 
 important predictors.
 
+Visual Exploration:
 
+In addition to the tabular EDA summaries, the project also generates several visualizations to 
+better illustrate customer subscription behavior.
 
-Numerical Feature Comparison
+The visualization script produces the following figures:
+
+• Overall customer subscription rate (%)  
+• Subscription rate by age group  
+• Top job categories among customers (%)  
+• Subscription rate by previous campaign outcome (poutcome)
+
+These figures help highlight which customer groups are more likely to subscribe and how previous 
+marketing outcomes relate to future success.
+
+All plots are saved automatically in the folder:
+
+outputs/figures
+
+Numerical Feature Comparison:
 
 I also compared the mean values of numerical features for customers who subscribed and those who 
 did not.
@@ -81,7 +98,7 @@ They often have longer call durations
 
 However, duration is a special case and was removed from the model to prevent data leakage (see below).
 
-Feature Engineering
+Feature Engineering:
 
 The dataset uses the value 999 in pdays to indicate that the customer had not been contacted previously.
 
@@ -93,7 +110,7 @@ replaced pdays = 999 with -1
 This helps distinguish customers who had previous contact from those who did not.
 
 
-Preventing Data Leakage
+Preventing Data Leakage:
 
 The variable duration was removed from model training.
 
@@ -104,14 +121,14 @@ so including it would introduce target leakage.
 For that reason, it was excluded from the baseline model.
 
 
-Modeling Approach
+Modeling Approach:
 
 A Logistic Regression model was used as the baseline classifier.
 
 The preprocessing pipeline includes:
 
-StandardScaler** for numerical features
-OneHotEncoder** for categorical features
+StandardScaler for numerical features
+OneHotEncoder for categorical features
 
 The dataset was split into:
 
@@ -141,7 +158,7 @@ non-subscribing customers, but recall for the positive class could still be impr
 
 
 
-Output Files
+Output Files:
 
 The model generates two useful output files.
 
@@ -177,7 +194,7 @@ bank_customer_analysis
 └── README.md
 
 
-How to Run
+How to Run:
 
 You can run the full workflow using the pipeline script.
 
@@ -206,7 +223,7 @@ Visualization: python -m src.data_visualization
 
 Model only: python -m src.train_baseline
 
-Final Thoughts
+Final Thoughts:
 
 This project demonstrates a simple end-to-end workflow for a classification problem:
 
