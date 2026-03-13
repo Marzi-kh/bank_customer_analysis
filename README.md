@@ -1,148 +1,224 @@
-# Bank Customer Marketing Analysis
+Bank Customer Analysis
 
-## Project Overview
+This project explores a bank marketing dataset and builds a simple machine learning model to 
+predict whether a customer will subscribe to a term deposit. The goal is to understand which 
+customer characteristics are associated with higher subscription rates and to create a b
+aseline predictive model.
 
-In this project, I worked with a bank marketing dataset to understand customer behavior and 
-build a simple model to predict whether a customer will subscribe to a term deposit.
+The project includes data exploration, feature engineering, and a logistic regression model 
+implemented using a scikit-learn pipeline.
 
-The main idea was to go through a full workflow — from exploring the data to building a 
-baseline model — and see how the results could actually be used in a business context.
 
-## Dataset
+# Dataset
 
-The dataset contains information about bank customers, including:
+The dataset contains 11,162 customer records with 17 variables describing demographic information,
+financial status, and previous marketing interactions.
 
-- Age, job, marital status, education  
-- Financial details like balance, loans, and housing  
-- Interaction history from previous marketing campaigns  
+The target variable is deposit, which indicates whether the customer subscribed to a term deposit.
 
-The target variable is:
+Target distribution:
 
-- deposit — whether the customer subscribed (yes/no)
+No: 5,873 customers (52.6%)
+Yes: 5,289 customers (47.4%)
 
-## Data Exploration
+Data quality checks show that the dataset is clean:
 
-The dataset has:
+No missing values
+No duplicate rows
 
-- 11,162 rows  
-- 17 columns  
 
-I checked for basic data quality issues and found no missing values or duplicates.
+Exploratory Data Analysis
 
-Some things that stood out:
+The analysis begins with basic dataset inspection (head, summary statistics, missing values, 
+column types).  
+I also implemented a quick EDA function that summarizes how different customer characteristics 
+relate to the probability of subscribing.
 
-- The target is fairly balanced (~53% no, ~47% yes), which is nice for modeling  
-- pdays = -1 means the customer was never contacted before  
-- balance varies a lot and even includes negative values  
-- previous campaign outcome (poutcome) looks like an important feature  
+Some interesting patterns appear in the data.
 
-Categorical variables like job or education also seem useful for segmenting customers.
+Job
 
-## Data Preparation
+Student → 74.7% subscription rate  
+Retired → 66.3%  
+Management → 50.7%  
+Blue-collar → 36.4%
 
-Since the data was already quite clean, I didn’t need heavy preprocessing.
+Marital status
 
-What I did:
+Single → 54.3%  
+Married → 43.4%
 
-- Verified there are no missing values or duplicates  
-- Created a simple feature called age_group (Young, Adult, Middle_age, Senior)  
-- Left categorical variables as they are and handled encoding inside the model pipeline  
+Education
 
-## Model
+Tertiary education → 54.1%  
+Primary education → 39.4%
 
-I used a logistic regression model as a baseline.
+Housing loan
 
-The pipeline includes:
+No housing loan → 57.0%  
+Housing loan → 36.6%
 
-- Scaling numerical features  
-- One-hot encoding categorical features  
-- Training the model  
+Previous campaign outcome
 
-The data was split into 80% training and 20% testing.
+Previous success → 91.3%  
+Unknown outcome → 40.7%
 
-## Results
+These patterns suggest that job type, housing status, and previous campaign success may be 
+important predictors.
 
-- Accuracy: 83%  
-- ROC-AUC: 0.91  
 
-The model does a good job separating customers who are likely to subscribe from those who 
-are not.
 
-From a practical point of view:
+Numerical Feature Comparison
 
-- It captures most of the positive cases  
-- It doesn’t produce too many false positives  
+I also compared the mean values of numerical features for customers who subscribed and those who 
+did not.
 
-## Business Output
+Some differences stand out:
 
-To make the results more useful:
+Customers who subscribed tend to have higher account balances
+They have more previous contacts
+They often have longer call durations
 
-- top_customers.csv  
-  Customers ranked by predicted probability  
-  → This can be used to target high-potential customers first  
+However, duration is a special case and was removed from the model to prevent data leakage (see below).
 
-- segment_summary.csv  
-  Aggregated performance by groups (job, age group, marital status)  
-  → This helps identify which segments are most likely to respond  
+Feature Engineering
 
-## Visualization
+The dataset uses the value 999 in pdays to indicate that the customer had not been contacted previously.
 
-Basic visualizations are generated, including:
+To make this easier for the model to interpret:
 
-- Age distribution  
-- Job distribution  
-- Correlation heatmap  
+created a binary feature  pdays_was_contacted
+replaced pdays = 999 with -1
 
-Plots are saved in:
+This helps distinguish customers who had previous contact from those who did not.
 
-outputs/figures/
 
-## Project Structure
+Preventing Data Leakage
 
-src/
-├── load_file.py
-├── data_exploration.py
-├── data_cleaning.py
-├── data_visualization.py
-├── train_baseline.py
+The variable duration was removed from model training.
 
-data/
-outputs/
-README.md
-requirements.txt
+Although call duration is strongly correlated with the target, it represents the length of 
+the marketing call itself. In practice, this value would only be known after the call finishes,
+so including it would introduce target leakage.
 
-## Installation
+For that reason, it was excluded from the baseline model.
 
-pip install -r requirements.txt
 
-## How to Run
+Modeling Approach
+
+A Logistic Regression model was used as the baseline classifier.
+
+The preprocessing pipeline includes:
+
+StandardScaler** for numerical features
+OneHotEncoder** for categorical features
+
+The dataset was split into:
+
+80% training data
+20% test data
+
+The split was stratified to preserve the class distribution.
+
+Model Results
+
+CONFUSION MATRIX
+[[958 217]
+ [463 595]]
+
+
+CLASSIFICATION REPORT
+              precision    recall  f1-score   
+           0       0.67      0.82      0.74      
+           1       0.73      0.56      0.64      
+
+Accuracy: 70%
+
+ROC-AUC: 0.758
+
+The baseline model performs reasonably well for a first attempt. It correctly identifies many 
+non-subscribing customers, but recall for the positive class could still be improved.
+
+
+
+Output Files
+
+The model generates two useful output files.
+
+top_customers.csv
+
+This file contains customers with the highest predicted probability of subscribing. 
+It can be used to identify promising leads for targeted marketing campaigns.
+
+segment_summary.csv
+
+This file summarizes predicted and actual subscription rates across customer segments such as:
+
+job
+age group
+marital status
+
+This helps connect model predictions with interpretable business insights.
+
+
+
+Project Structure
+bank_customer_analysis
+│
+├── data
+├── outputs
+├── src
+│ ├── load_file.py
+│ ├── data_exploration.py
+│ ├── data_visualization.py
+│ ├── data_cleaning.py
+│ ├── train_baseline.py
+│
+└── README.md
+
+
+How to Run
+
+You can run the full workflow using the pipeline script.
 
 python -m src.pipeline
 
-This runs the full workflow: loading the data, preparing it, training the model, and saving 
-the results to the outputs/ folder.
-## Other Scripts
+This script runs the main steps of the project:
+
+1. Loads the dataset
+2. Handles missing values
+3. Creates new features (such as age groups)
+4. Trains the baseline logistic regression model
+5. Saves the results to the outputs/ folder
+
+The script will generate the following files:
+
+top_customers.csv — customers with the highest predicted probability of subscribing
+segment_summary.csv — summary of predicted and actual subscription rates across customer segments
 
 You can also run individual parts of the project:
 
-Data exploration:
-python -m src.data_exploration
+Data exploration: python -m src.data_exploration
 
-Data cleaning:
-python -m src.data_cleaning
+Data cleaning: python -m src.data_cleaning
 
-Visualization:
-python -m src.data_visualization
+Visualization: python -m src.data_visualization
 
-Model only:
-python -m src.train_baseline
+Model only: python -m src.train_baseline
 
-## Final Thoughts
+Final Thoughts
 
-This project demonstrates a simple and practical workflow:
+This project demonstrates a simple end-to-end workflow for a classification problem:
 
-- Exploring and understanding data  
-- Building a baseline predictive model  
-- Translating predictions into actionable business insights  
+exploring and understanding the dataset  
+identifying useful patterns through quick EDA summaries  
+performing simple feature engineering  
+building a baseline predictive model  
+translating predictions into interpretable business insights
 
-Even with a simple model, meaningful improvements in marketing targeting can be achieved.
+Even with a relatively simple model like logistic regression, the results already provide useful 
+signals for marketing targeting. By identifying customer segments with higher predicted 
+probabilities of subscribing, marketing efforts could potentially focus on the most promising leads.
+
+Future improvements could include trying more advanced models, tuning hyperparameters, and 
+exploring additional feature engineering to improve prediction performance.

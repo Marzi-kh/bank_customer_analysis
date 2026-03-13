@@ -14,8 +14,15 @@ from src.load_file import load_data
 def train_baseline_model(top_n: int = 100):
     df = load_data()
 
-    X = df.drop(columns=["deposit"])
+
+
+    df["pdays_was_contacted"] = (df["pdays"] != 999).astype(int)
+    df["pdays"] = df["pdays"].replace(999, -1)
+
+
+    X = df.drop(columns=["deposit", "duration"])  # remove duration to avoid target leakage
     y = df["deposit"].map({"yes": 1, "no": 0})
+
 
     num_cols = X.select_dtypes(include=["number"]).columns
     cat_cols = X.select_dtypes(include=["object", "category"]).columns
@@ -91,7 +98,7 @@ def train_baseline_model(top_n: int = 100):
             return pd.DataFrame()
 
         summary = (
-            df_.groupby(group_col)
+            df_.groupby(group_col, observed=False)
             .agg(
                 customers=("actual", "size"),
                 actual_yes_rate=("actual", "mean"),
